@@ -1158,7 +1158,7 @@
   <script src="assets/js/main.js"></script>
   
   
-  <script type='text/javascript'>
+ <script type='text/javascript'>
 	function loadEmbeddedServiceScript() {
 		var s = document.createElement('script');
 		s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js');
@@ -1181,8 +1181,10 @@
 				}
 			);
 
-			// Automatically launch the chat window after initialization
-			launchChat();
+			// Delay the chat launch to ensure everything is loaded
+			setTimeout(function() {
+				launchChat();
+			}, 2000); // Adjust the timeout if needed
 
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
@@ -1192,20 +1194,18 @@
 	function launchChat() {
 		embeddedservice_bootstrap.utilAPI.launchChat()
 			.then(() => {
-				// You can add any additional logic here for when the chat is successfully launched
 				console.log('Chat launched successfully.');
-			}).catch(() => {
-				// Handle the error if the chat fails to launch
-				console.error('Failed to launch chat.');
+			}).catch((error) => {
+				console.error('Failed to launch chat.', error);
 			}).finally(() => {
-				// Any cleanup or final actions regardless of success or failure
 				console.log('Chat launch attempt finished.');
 			});
-	};
+	}
 
 	// Initiate the loading process and auto-launch the chat
 	loadEmbeddedServiceScript();
 </script>
+
 
 <script type='text/javascript' src='https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
