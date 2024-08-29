@@ -1181,13 +1181,15 @@
 				}
 			);
 
-			// Auto-launch the chat once the initialization is complete
-			embeddedservice_bootstrap.utilAPI.launchChat()
-				.then(() => {
-					console.log('Chat launched successfully.');
-				}).catch((error) => {
-					console.error('Failed to launch chat.', error);
-				});
+			// Ensure the chat window launches only after initialization is complete
+			embeddedservice_bootstrap.addEventHandler("onSettingsCallCompleted", function() {
+				embeddedservice_bootstrap.utilAPI.launchChat()
+					.then(() => {
+						console.log('Chat launched successfully.');
+					}).catch((error) => {
+						console.error('Failed to launch chat.', error);
+					});
+			});
 
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
@@ -1197,6 +1199,7 @@
 	// Load the Embedded Service script and initialize chat
 	loadEmbeddedServiceScript();
 </script>
+
 
 <script type='text/javascript' src='https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
