@@ -1158,7 +1158,7 @@
   <script src="assets/js/main.js"></script>
   
   
-   <script type='text/javascript'>
+  <script type='text/javascript'>
 	function loadEmbeddedServiceScript() {
 		var s = document.createElement('script');
 		s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js');
@@ -1180,6 +1180,10 @@
 					scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com'
 				}
 			);
+
+			// Automatically launch the chat window after initialization
+			launchChat();
+
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		}
@@ -1188,15 +1192,18 @@
 	function launchChat() {
 		embeddedservice_bootstrap.utilAPI.launchChat()
 			.then(() => {
-				disableLaunchChatButton();
+				// You can add any additional logic here for when the chat is successfully launched
+				console.log('Chat launched successfully.');
 			}).catch(() => {
-				hideLaunchChatButton();
+				// Handle the error if the chat fails to launch
+				console.error('Failed to launch chat.');
 			}).finally(() => {
-				logEndUserAttemptToChat();
+				// Any cleanup or final actions regardless of success or failure
+				console.log('Chat launch attempt finished.');
 			});
 	};
 
-	// Initiate the loading process
+	// Initiate the loading process and auto-launch the chat
 	loadEmbeddedServiceScript();
 </script>
 
