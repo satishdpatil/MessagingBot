@@ -1158,10 +1158,19 @@
   <script src="assets/js/main.js"></script>
   
   
-   <script type='text/javascript'>
+ <script type='text/javascript'>
+	function loadEmbeddedServiceScript() {
+		var s = document.createElement('script');
+		s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js');
+		s.onload = function() {
+			initEmbeddedMessaging();
+		};
+		document.body.appendChild(s);
+	}
+
 	function initEmbeddedMessaging() {
 		try {
-			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+			embeddedservice_bootstrap.settings.language = 'en_US';
 
 			embeddedservice_bootstrap.init(
 				'00DBm000001O3Ub',
@@ -1171,35 +1180,23 @@
 					scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com'
 				}
 			);
+
+			// Auto-launch the chat once the initialization is complete
+			embeddedservice_bootstrap.utilAPI.launchChat()
+				.then(() => {
+					console.log('Chat launched successfully.');
+				}).catch((error) => {
+					console.error('Failed to launch chat.', error);
+				});
+
 		} catch (err) {
 			console.error('Error loading Embedded Messaging: ', err);
 		}
-	};
-	
+	}
 
-// Call Launch Chat API.
-
-    function launchChat() {
-        embeddedservice_bootstrap.utilAPI.launchChat()
-            .then(() => {
-                // Success handler used to perform actions
-                // when the chat client launches successfully.
-                // For example, create a method that disables the launch chat button.
-                disableLaunchChatButton();
-            }).catch(() => {
-                // Error handler used to perform actions
-                // if the chat client fails to launch.
-                // For example, create a method that hides the launch chat button.
-                hideLaunchChatButton();
-            }).finally(() => {
-                // Finally handler used to perform any clean-up actions
-                // regardless of whether the chat client launches successfully or not.
-                // For example, create a method that logs the user’s attempt to chat.
-                logEndUserAttemptToChat();
-            });
-    };
-	
-	 </script>
+	// Load the Embedded Service script and initialize chat
+	loadEmbeddedServiceScript();
+</script>
 
 <script type='text/javascript' src='https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
