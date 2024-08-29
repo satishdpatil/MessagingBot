@@ -112,6 +112,7 @@
             <p>We are team of talented designers making websites with Bootstrap</p>
             <div class="d-flex">
               <a href="#about" class="btn-get-started">Get Started</a>
+			  <button id="launchChatButton" onclick="launchChat()">Click to contact support</button>
               <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
             </div>
           </div>
@@ -1174,6 +1175,29 @@
 			console.error('Error loading Embedded Messaging: ', err);
 		}
 	};
+	
+
+// Call Launch Chat API.
+<script>
+    function launchChat() {
+        embeddedservice_bootstrap.utilAPI.launchChat()
+            .then(() => {
+                // Success handler used to perform actions
+                // when the chat client launches successfully.
+                // For example, create a method that disables the launch chat button.
+                disableLaunchChatButton();
+            }).catch(() => {
+                // Error handler used to perform actions
+                // if the chat client fails to launch.
+                // For example, create a method that hides the launch chat button.
+                hideLaunchChatButton();
+            }).finally(() => {
+                // Finally handler used to perform any clean-up actions
+                // regardless of whether the chat client launches successfully or not.
+                // For example, create a method that logs the user’s attempt to chat.
+                logEndUserAttemptToChat();
+            });
+    }
 </script>
 <script type='text/javascript' src='https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
