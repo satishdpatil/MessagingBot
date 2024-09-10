@@ -1185,10 +1185,9 @@
     function launchChat() {
         embeddedservice_bootstrap.utilAPI.launchChat()
             .then(() => {
-                // Success handler used to perform actions
-                // when the chat client launches successfully.
-                // For example, create a method that disables the launch chat button.
-               // disableLaunchChatButton();
+				   embedded_svc.addEventHandler("afterMaximize", function(data) {
+					console.log("afterMaximize event was fired.");
+				});
             }).catch(() => {
                 // Error handler used to perform actions
                 // if the chat client fails to launch.
@@ -1202,13 +1201,7 @@
             });
     };
 	
-		 window.onload = function() {
-		//initEmbeddedMessaging();
 
-			embedded_svc.addEventHandler("afterMaximize", function(data) {
-				console.log("afterMaximize event was fired.");
-			});
-		};
 	
 	 </script>
 
