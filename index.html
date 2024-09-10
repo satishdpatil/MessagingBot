@@ -1202,9 +1202,13 @@
             });
     };
 	
-		embedded_svc.addEventHandler("afterMaximize", function(data) {
-		console.log("afterMaximize event was fired.");
-		});
+		 window.onload = function() {
+		//initEmbeddedMessaging();
+
+			embedded_svc.addEventHandler("afterMaximize", function(data) {
+				console.log("afterMaximize event was fired.");
+			});
+		};
 	
 	 </script>
 
