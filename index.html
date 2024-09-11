@@ -1158,73 +1158,77 @@
   <script src="assets/js/main.js"></script>
  
 <script type="text/javascript">
-    // Initialize Embedded Messaging
+    function loadSalesforceSDK() {
+        // Load the Salesforce Embedded Service SDK dynamically
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.my.site.com/embeddedservice/5.0/esw.min.js'); // Your correct Salesforce SDK URL
+
+        s.onload = function() {
+            console.log('Salesforce SDK loaded successfully.');
+            initEmbeddedMessaging(); // Initialize after SDK is loaded
+        };
+
+        s.onerror = function() {
+            console.error('Failed to load Salesforce SDK.');
+        };
+
+        document.body.appendChild(s);
+    }
+
     function initEmbeddedMessaging() {
-        // Check if embedded_svc is defined
-        if (typeof embedded_svc === 'undefined') {
-            console.error('Embedded Service SDK not loaded.');
-            return;
-        }
-
-        // Set pre-chat background image and avatar image
-        embedded_svc.settings.prechatBackgroundImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/letTalks2.jpg';
-        embedded_svc.settings.avatarImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/manavatar2.jpg';
-
-        // Set language settings
-        embeddedservice_bootstrap.settings.language = 'en_US';
-
         try {
-            // Initialize the chat service
+            // Check if the SDK is loaded correctly
+            if (typeof embedded_svc === 'undefined') {
+                console.error('Embedded Service SDK not loaded.');
+                return;
+            }
+
+            // Set pre-chat background and avatar image (use full URL)
+            embedded_svc.settings.prechatBackgroundImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/letTalks2.jpg';
+            embedded_svc.settings.avatarImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/manavatar2.jpg';
+
+            // Set language
+            embeddedservice_bootstrap.settings.language = 'en_US';
+
+            // Initialize the chat service with correct parameters
             embeddedservice_bootstrap.init(
-                '00DBm000001O3Ub',  // Org ID
-                'MessaginWebBot',   // Chat Button ID
-                'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779', // Site URL
+                '00DBm000001O3Ub', // Org ID
+                'MessaginWebBot',  // Chat Button ID
+                'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779', // Correct site URL
                 {
-                    scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional URL
+                    scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional, can be removed
                 }
             );
 
-            // Wait until the chat service is initialized before launching the chat
+            // Delay launching chat to ensure initialization is complete
             setTimeout(function() {
                 launchChat();
-            }, 5000);  // Slight delay to ensure the SDK is fully loaded
+            }, 5000); // 5 seconds delay
+
         } catch (err) {
             console.error('Error initializing Embedded Messaging:', err);
         }
     }
 
-    // Function to launch the chat
     function launchChat() {
         if (typeof embedded_svc !== 'undefined' && embeddedservice_bootstrap.utilAPI) {
             embeddedservice_bootstrap.utilAPI.launchChat()
                 .then(() => {
-                    console.log("Chat launched successfully");
+                    console.log('Chat launched successfully');
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.error('Error launching chat:', err);
                 });
         } else {
-            console.error('Embedded Service SDK not available or not fully initialized.');
+            console.error('Embedded Service SDK is not fully loaded.');
         }
     }
 
-    // Initialize messaging when window loads
     window.onload = function() {
-        console.log("Loading Salesforce SDK...");
-
-        // Load Salesforce SDK dynamically
-        var s = document.createElement('script');
-        s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.my.site.com/embeddedservice/5.0/esw.min.js');  // Correct URL for the Salesforce SDK
-        s.onload = function() {
-            console.log("Salesforce SDK loaded, initializing...");
-            initEmbeddedMessaging();  // Initialize the SDK after loading
-        };
-        s.onerror = function() {
-            console.error('Failed to load Salesforce SDK.');
-        };
-        document.body.appendChild(s);
+        loadSalesforceSDK(); // Load SDK on window load
     };
 </script>
+
 <script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js"></script>
 </body>
 
