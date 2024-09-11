@@ -1169,6 +1169,10 @@
                 console.error('Embedded Service SDK not loaded.');
                 return;
             }
+			
+			embedded_svc.addEventHandler("afterMaximize", function(data) {
+                        console.log("afterMaximize event was fired.");
+                    });
 
             // Set pre-chat background image (ensure full URL)
             embedded_svc.settings.prechatBackgroundImgURL = 'assets/img/letsTalk.jpg'; // Replace with your actual image URL
@@ -1203,9 +1207,7 @@
                 .then(() => {
                     console.log("Chat launched successfully");
                     // Add event handler after maximizing the chat
-                    embedded_svc.addEventHandler("afterMaximize", function(data) {
-                        console.log("afterMaximize event was fired.");
-                    });
+                    
                 })
                 .catch((err) => {
                     console.error('Error launching chat:', err);
