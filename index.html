@@ -1157,31 +1157,34 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
  
-<!-- Load the Embedded Service SDK
-<script type="text/javascript" src="assets/js/esw.min.js"></script>-->
+<!-- Load the Embedded Service SDK -->
+<script type="text/javascript" src="assets/js/esw.min.js"></script>
 
 <script type="text/javascript">
-    var initESW = function(gslbBaseURL) {
-        // Check if the SDK is loaded
-        if (typeof embedded_svc === 'undefined') {
-            console.error('Embedded Service SDK not loaded.');
-            return;
-        }
-
-        // Set pre-chat background image and avatar image
-        embedded_svc.settings.prechatBackgroundImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/letTalks2.jpg';
-        embedded_svc.settings.avatarImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/manavatar2.jpg';
-
-        // Set additional settings
-        embedded_svc.settings.displayHelpButton = true; // Show Help button
-        embedded_svc.settings.language = 'en_US'; // Set language
-        embedded_svc.addEventHandler("afterMaximize", function(data) {
-            console.log("afterMaximize event was fired.");
-        });
-
-        console.log("Initializing embeddedservice_bootstrap...");
-        
+    // Initialize Embedded Messaging
+    function initEmbeddedMessaging() {
+	
+	
         try {
+            // Check if the SDK is loaded
+            if (typeof embedded_svc === 'undefined') {
+                console.error('Embedded Service SDK not loaded.');
+                return;
+            }
+			
+			embedded_svc.addEventHandler("afterMaximize", function(data) {
+                        console.log("afterMaximize event was fired.");
+                    });
+
+            // Set pre-chat background image (ensure full URL)
+            embedded_svc.settings.prechatBackgroundImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/letTalks2.jpg';
+			embedded_svc.settings.avatarImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/manavatar2.jpg'
+			console.log('prechatBackgroundImgURL** '+embedded_svc.settings.prechatBackgroundImgURL);
+			console.log('embedded_svc** '+JSON.stringify(embedded_svc));
+
+            // Set language settings
+            embeddedservice_bootstrap.settings.language = 'en_US';
+
             // Initialize the chat service for a non-Salesforce site
             embeddedservice_bootstrap.init(
                 '00DBm000001O3Ub',  // Org ID
@@ -1199,7 +1202,7 @@
         } catch (err) {
             console.error('Error initializing Embedded Messaging:', err);
         }
-    };
+    }
 
     // Function to launch the chat
     function launchChat() {
@@ -1208,6 +1211,8 @@
             embeddedservice_bootstrap.utilAPI.launchChat()
                 .then(() => {
                     console.log("Chat launched successfully");
+                    // Add event handler after maximizing the chat
+                    
                 })
                 .catch((err) => {
                     console.error('Error launching chat:', err);
@@ -1219,25 +1224,12 @@
 
     // Initialize messaging when window loads
     window.onload = function() {
-        console.log("Loading Salesforce SDK...");
-
-        // Load Salesforce SDK dynamically
-        var s = document.createElement('script');
-        s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.lightning.force.com/embeddedservice/5.0/esw.min.js'); // Replace with your Salesforce domain
-        s.onload = function() {
-            console.log("Salesforce SDK loaded, initializing...");
-            initESW(null); // Initialize the SDK after loading
-        };
-        s.onerror = function() {
-            console.error('Failed to load Salesforce SDK.');
-        };
-        document.body.appendChild(s);
+        initEmbeddedMessaging();
     };
 </script>
 
 <!-- Load necessary scripts for the non-Salesforce site -->
 <script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js"></script>
-
 
 
 
