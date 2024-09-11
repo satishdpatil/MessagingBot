@@ -1157,57 +1157,73 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
  
-  
-   <script type='text/javascript'>
-	function initEmbeddedMessaging() {
-		try {
-			embedded_svc.settings.prechatBackgroundImgURL = 'assets/img/letsTalk.jpg';
-			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+<!-- Load the Embedded Service SDK -->
+<script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.salesforce.com/embeddedservice/5.0/esw.min.js"></script>
 
-			embeddedservice_bootstrap.init(
-				'00DBm000001O3Ub',
-				'MessaginWebBot',
-				'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779',
-				{
-					scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com'
-				}
-			);
-			setTimeout(function() {
-				launchChat();
-			}, 8000);
-		} catch (err) {
-			console.error('Error loading Embedded Messaging: ', err);
-		}
-	};
-	
+<script type="text/javascript">
+    // Initialize Embedded Messaging
+    function initEmbeddedMessaging() {
+        try {
+            // Check if the SDK is loaded
+            if (typeof embedded_svc === 'undefined') {
+                console.error('Embedded Service SDK not loaded.');
+                return;
+            }
 
-// Call Launch Chat API.
+            // Set pre-chat background image (ensure full URL)
+            embedded_svc.settings.prechatBackgroundImgURL = 'https://example.com/path-to-banner/letsTalk.jpg'; // Replace with your actual image URL
 
+            // Set language settings
+            embeddedservice_bootstrap.settings.language = 'en_US';
+
+            // Initialize the chat service for a non-Salesforce site
+            embeddedservice_bootstrap.init(
+                '00DBm000001O3Ub',  // Org ID
+                'MessaginWebBot',   // Chat Button ID
+                'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779', // Site URL
+                {
+                    scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional URL, remove if not required
+                }
+            );
+
+            // Launch chat after a slight delay
+            setTimeout(function() {
+                launchChat();
+            }, 8000);
+        } catch (err) {
+            console.error('Error initializing Embedded Messaging:', err);
+        }
+    }
+
+    // Function to launch the chat
     function launchChat() {
-        embeddedservice_bootstrap.utilAPI.launchChat()
-            .then(() => {
-				   embedded_svc.addEventHandler("afterMaximize", function(data) {
-					console.log("afterMaximize event was fired.");
-				});
-            }).catch(() => {
-                // Error handler used to perform actions
-                // if the chat client fails to launch.
-                // For example, create a method that hides the launch chat button.
-                //hideLaunchChatButton();
-            }).finally(() => {
-                // Finally handler used to perform any clean-up actions
-                // regardless of whether the chat client launches successfully or not.
-                // For example, create a method that logs the user’s attempt to chat.
-                //logEndUserAttemptToChat();
-            });
+        // Ensure embedded_svc is defined before launching
+        if (typeof embedded_svc !== 'undefined') {
+            embeddedservice_bootstrap.utilAPI.launchChat()
+                .then(() => {
+                    console.log("Chat launched successfully");
+                    // Add event handler after maximizing the chat
+                    embedded_svc.addEventHandler("afterMaximize", function(data) {
+                        console.log("afterMaximize event was fired.");
+                    });
+                })
+                .catch((err) => {
+                    console.error('Error launching chat:', err);
+                });
+        } else {
+            console.error('Embedded Service SDK not available.');
+        }
+    }
+
+    // Initialize messaging when window loads
+    window.onload = function() {
+        initEmbeddedMessaging();
     };
-	
+</script>
 
-	
-	 </script>
+<!-- Load necessary scripts for the non-Salesforce site -->
+<script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js"></script>
 
-<script type='text/javascript' src='https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js' ></script>
- <script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js' onload='initEmbeddedMessaging()'></script>
 
 
 </body>
