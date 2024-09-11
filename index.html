@@ -1179,20 +1179,26 @@
             console.log("afterMaximize event was fired.");
         });
 
-        // Initialize the chat service for a non-Salesforce site
-        embeddedservice_bootstrap.init(
-            '00DBm000001O3Ub',  // Org ID
-            'MessaginWebBot',   // Chat Button ID
-            'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779', // Site URL
-            {
-                scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional URL, remove if not required
-            }
-        );
+        console.log("Initializing embeddedservice_bootstrap...");
+        
+        try {
+            // Initialize the chat service for a non-Salesforce site
+            embeddedservice_bootstrap.init(
+                '00DBm000001O3Ub',  // Org ID
+                'MessaginWebBot',   // Chat Button ID
+                'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779', // Site URL
+                {
+                    scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional URL, remove if not required
+                }
+            );
 
-        // Launch chat after a slight delay
-        setTimeout(function() {
-            launchChat();
-        }, 8000);
+            // Launch chat after a slight delay
+            setTimeout(function() {
+                launchChat();
+            }, 8000);
+        } catch (err) {
+            console.error('Error initializing Embedded Messaging:', err);
+        }
     };
 
     // Function to launch the chat
@@ -1213,11 +1219,17 @@
 
     // Initialize messaging when window loads
     window.onload = function() {
+        console.log("Loading Salesforce SDK...");
+
         // Load Salesforce SDK dynamically
         var s = document.createElement('script');
-        s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.lightning.force.com/embeddedservice/5.0/esw.min.js');
+        s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.lightning.force.com/embeddedservice/5.0/esw.min.js'); // Replace with your Salesforce domain
         s.onload = function() {
+            console.log("Salesforce SDK loaded, initializing...");
             initESW(null); // Initialize the SDK after loading
+        };
+        s.onerror = function() {
+            console.error('Failed to load Salesforce SDK.');
         };
         document.body.appendChild(s);
     };
@@ -1225,6 +1237,7 @@
 
 <!-- Load necessary scripts for the non-Salesforce site -->
 <script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js"></script>
+
 
 
 
