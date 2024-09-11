@@ -1172,6 +1172,7 @@
         // Set additional settings
         embedded_svc.settings.displayHelpButton = true; // Show Help button
         embedded_svc.settings.language = 'en_US'; // Set language
+		embeddedservice_bootstrap.settings.language = 'en_US';
         embedded_svc.addEventHandler("afterMaximize", function(data) {
             console.log("afterMaximize event was fired.");
         });
