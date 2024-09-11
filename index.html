@@ -1158,8 +1158,9 @@
   <script src="assets/js/main.js"></script>
  
 <script type="text/javascript">
-    var initESW = function(gslbBaseURL) {
-        // Check if the SDK is loaded
+    // Initialize Embedded Messaging
+    function initEmbeddedMessaging() {
+        // Check if embedded_svc is defined
         if (typeof embedded_svc === 'undefined') {
             console.error('Embedded Service SDK not loaded.');
             return;
@@ -1169,40 +1170,32 @@
         embedded_svc.settings.prechatBackgroundImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/letTalks2.jpg';
         embedded_svc.settings.avatarImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/manavatar2.jpg';
 
-        // Set additional settings
-        embedded_svc.settings.displayHelpButton = true; // Show Help button
-        embedded_svc.settings.language = 'en_US'; // Set language
-		embeddedservice_bootstrap.settings.language = 'en_US';
-        embedded_svc.addEventHandler("afterMaximize", function(data) {
-            console.log("afterMaximize event was fired.");
-        });
+        // Set language settings
+        embeddedservice_bootstrap.settings.language = 'en_US';
 
-        console.log("Initializing embeddedservice_bootstrap...");
-        
         try {
-            // Initialize the chat service for a non-Salesforce site
+            // Initialize the chat service
             embeddedservice_bootstrap.init(
                 '00DBm000001O3Ub',  // Org ID
                 'MessaginWebBot',   // Chat Button ID
                 'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779', // Site URL
                 {
-                    scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional URL, remove if not required
+                    scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional URL
                 }
             );
 
-            // Launch chat after a slight delay
+            // Wait until the chat service is initialized before launching the chat
             setTimeout(function() {
                 launchChat();
-            }, 8000);
+            }, 5000);  // Slight delay to ensure the SDK is fully loaded
         } catch (err) {
             console.error('Error initializing Embedded Messaging:', err);
         }
-    };
+    }
 
     // Function to launch the chat
     function launchChat() {
-        // Ensure embedded_svc is defined before launching
-        if (typeof embedded_svc !== 'undefined') {
+        if (typeof embedded_svc !== 'undefined' && embeddedservice_bootstrap.utilAPI) {
             embeddedservice_bootstrap.utilAPI.launchChat()
                 .then(() => {
                     console.log("Chat launched successfully");
@@ -1211,7 +1204,7 @@
                     console.error('Error launching chat:', err);
                 });
         } else {
-            console.error('Embedded Service SDK not available.');
+            console.error('Embedded Service SDK not available or not fully initialized.');
         }
     }
 
@@ -1221,10 +1214,10 @@
 
         // Load Salesforce SDK dynamically
         var s = document.createElement('script');
-        s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.lightning.force.com/embeddedservice/5.0/esw.min.js'); // Replace with your Salesforce domain
+        s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.my.site.com/embeddedservice/5.0/esw.min.js');  // Correct URL for the Salesforce SDK
         s.onload = function() {
             console.log("Salesforce SDK loaded, initializing...");
-            initESW(null); // Initialize the SDK after loading
+            initEmbeddedMessaging();  // Initialize the SDK after loading
         };
         s.onerror = function() {
             console.error('Failed to load Salesforce SDK.');
@@ -1233,8 +1226,6 @@
     };
 </script>
 
-<!-- Load necessary scripts for the non-Salesforce site -->
-<script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js"></script>
 
 
 
