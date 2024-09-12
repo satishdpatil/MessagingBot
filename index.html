@@ -1157,33 +1157,81 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
  
-<script src="https://peopleschoicecu--dev3.sandbox.lightning.force.com/embeddedservice/5.0/esw.min.js"></script>
+<script type="text/javascript" src="https://service.force.com/embeddedservice/5.0/esw.min.js"></script>
 
 <script type="text/javascript">
+    // Initialize Embedded Messaging
     function initEmbeddedMessaging() {
-        if (typeof embedded_svc === 'undefined') {
-            console.error('Embedded Service SDK not loaded.');
-            return;
-        }
-	embeddedservice_bootstrap.settings.language = 'en_US';
-        // Configuration for external sites
-        embeddedservice_bootstrap.settings.isExternalPage = true;
-
-        // Initialize the chat service
-        embeddedservice_bootstrap.init(
-            '00DBm000001O3Ub',  // Salesforce Org ID
-            'MessaginWebBot',   // Chat Button ID
-            'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779', // Site URL
-            {
-                scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional URL
+        try {
+            // Check if the SDK is loaded
+            if (typeof embedded_svc === 'undefined') {
+                console.error('Embedded Service SDK not loaded.');
+                return;
             }
-        );
+
+            // Override the problematic function to return false for external pages
+            embedded_svc.utils.isCommunityOrSite = function() {
+                return false; // Always return false for non-Salesforce sites
+            };
+
+            // Set pre-chat background image (ensure full URL)
+            embedded_svc.settings.prechatBackgroundImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/letTalks2.jpg';
+            embedded_svc.settings.avatarImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/manavatar2.jpg';
+
+            console.log('prechatBackgroundImgURL: ' + embedded_svc.settings.prechatBackgroundImgURL);
+            console.log('embedded_svc: ' + JSON.stringify(embedded_svc));
+
+            // Set language settings
+            embeddedservice_bootstrap.settings.language = 'en_US';
+
+            // Initialize the chat service for a non-Salesforce site
+            embeddedservice_bootstrap.init(
+                '00DBm000001O3Ub',  // Org ID
+                'MessaginWebBot',   // Chat Button ID
+                'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779', // Site URL
+                {
+                    scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional URL, remove if not required
+                }
+            );
+
+            // Launch chat after a slight delay
+            setTimeout(function() {
+                launchChat();
+            }, 8000);
+        } catch (err) {
+            console.error('Error initializing Embedded Messaging:', err);
+        }
     }
 
-    window.onload = initEmbeddedMessaging;
+    // Function to launch the chat
+    function launchChat() {
+        // Ensure embedded_svc is defined before launching
+        if (typeof embedded_svc !== 'undefined') {
+            embeddedservice_bootstrap.utilAPI.launchChat()
+                .then(() => {
+                    console.log("Chat launched successfully");
+                    // Add event handler after maximizing the chat
+                    embedded_svc.addEventHandler("afterMaximize", function(data) {
+                        console.log("afterMaximize event was fired.");
+                    });
+                })
+                .catch((err) => {
+                    console.error('Error launching chat:', err);
+                });
+        } else {
+            console.error('Embedded Service SDK not available.');
+        }
+    }
+
+    // Initialize messaging when window loads
+    window.onload = function() {
+        initEmbeddedMessaging();
+    };
 </script>
 
+<!-- Load necessary scripts for the non-Salesforce site -->
 <script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>
