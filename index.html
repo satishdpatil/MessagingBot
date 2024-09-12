@@ -1157,22 +1157,28 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
  
-<script type="text/javascript" src="https://service.force.com/embeddedservice/5.0/esw.min.js"></script>
+<<script type="text/javascript" src="https://service.force.com/embeddedservice/5.0/esw.min.js"></script>
 
 <script type="text/javascript">
     // Initialize Embedded Messaging
     function initEmbeddedMessaging() {
         try {
-            // Check if the SDK is loaded
+            // Wait for the SDK to be loaded before proceeding
             if (typeof embedded_svc === 'undefined') {
                 console.error('Embedded Service SDK not loaded.');
                 return;
             }
 
-            // Override the problematic function to return false for external pages
-            embedded_svc.utils.isCommunityOrSite = function() {
-                return false; // Always return false for non-Salesforce sites
-            };
+            // Check if embedded_svc.utils exists before overriding
+            if (embedded_svc && embedded_svc.utils) {
+                // Override the problematic function to return false for external pages
+                embedded_svc.utils.isCommunityOrSite = function() {
+                    return false; // Always return false for non-Salesforce sites
+                };
+                console.log('isCommunityOrSite function overridden successfully.');
+            } else {
+                console.error('embedded_svc.utils is undefined.');
+            }
 
             // Set pre-chat background image (ensure full URL)
             embedded_svc.settings.prechatBackgroundImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/letTalks2.jpg';
@@ -1231,6 +1237,7 @@
 
 <!-- Load necessary scripts for the non-Salesforce site -->
 <script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js"></script>
+
 
 </body>
 
