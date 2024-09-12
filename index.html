@@ -1157,76 +1157,30 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
  
+<script src="https://peopleschoicecu--dev3.sandbox.lightning.force.com/embeddedservice/5.0/esw.min.js"></script>
+
 <script type="text/javascript">
-    function loadSalesforceSDK() {
-        // Load the Salesforce Embedded Service SDK dynamically
-        var s = document.createElement('script');
-        s.setAttribute('src', 'https://peopleschoicecu--dev3.sandbox.my.site.com/embeddedservice/5.0/esw.min.js'); // Your correct Salesforce SDK URL
-
-        s.onload = function() {
-            console.log('Salesforce SDK loaded successfully.');
-            initEmbeddedMessaging(); // Initialize after SDK is loaded
-        };
-
-        s.onerror = function() {
-            console.error('Failed to load Salesforce SDK.');
-        };
-
-        document.body.appendChild(s);
-    }
-
     function initEmbeddedMessaging() {
-        try {
-            // Check if the SDK is loaded correctly
-            if (typeof embedded_svc === 'undefined') {
-                console.error('Embedded Service SDK not loaded.');
-                return;
+        if (typeof embedded_svc === 'undefined') {
+            console.error('Embedded Service SDK not loaded.');
+            return;
+        }
+
+        // Configuration for external sites
+        embeddedservice_bootstrap.settings.isExternalPage = true;
+
+        // Initialize the chat service
+        embeddedservice_bootstrap.init(
+            '00DBm000001O3Ub',  // Salesforce Org ID
+            'MessaginWebBot',   // Chat Button ID
+            'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779', // Site URL
+            {
+                scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional URL
             }
-
-            // Set pre-chat background and avatar image (use full URL)
-            embedded_svc.settings.prechatBackgroundImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/letTalks2.jpg';
-            embedded_svc.settings.avatarImgURL = 'https://satishdpatil.github.io/MessagingBot.github.io/assets/img/manavatar2.jpg';
-
-            // Set language
-            embeddedservice_bootstrap.settings.language = 'en_US';
-
-            // Initialize the chat service with correct parameters
-            embeddedservice_bootstrap.init(
-                '00DBm000001O3Ub', // Org ID
-                'MessaginWebBot',  // Chat Button ID
-                'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779', // Correct site URL
-                {
-                    scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Optional, can be removed
-                }
-            );
-
-            // Delay launching chat to ensure initialization is complete
-            setTimeout(function() {
-                launchChat();
-            }, 5000); // 5 seconds delay
-
-        } catch (err) {
-            console.error('Error initializing Embedded Messaging:', err);
-        }
+        );
     }
 
-    function launchChat() {
-        if (typeof embedded_svc !== 'undefined' && embeddedservice_bootstrap.utilAPI) {
-            embeddedservice_bootstrap.utilAPI.launchChat()
-                .then(() => {
-                    console.log('Chat launched successfully');
-                })
-                .catch(err => {
-                    console.error('Error launching chat:', err);
-                });
-        } else {
-            console.error('Embedded Service SDK is not fully loaded.');
-        }
-    }
-
-    window.onload = function() {
-        loadSalesforceSDK(); // Load SDK on window load
-    };
+    window.onload = initEmbeddedMessaging;
 </script>
 
 <script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js"></script>
