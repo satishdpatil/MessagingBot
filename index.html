@@ -1202,7 +1202,7 @@
                     console.log("Chat launched successfully");
                 })
                 .catch((err) => {
-                    console.error('Error launching chat:', err);
+                    console.error('Error launching chat:'+ JSON.stringify(err));
                 });
         } else {
             console.error('Embedded Service SDK not available.');
