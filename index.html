@@ -1215,17 +1215,17 @@
     };
 	
 		window.addEventListener("onEmbeddedMessagingReady", () => {
-		console.log("Received the onEmbeddedMessagingReady event.");
-		console.log('Settings Object4:::'+JSON.stringify(embeddedservice_bootstrap.settings));
+		//console.log("Received the onEmbeddedMessagingReady event.");
+		//console.log('Settings Object4:::'+JSON.stringify(embeddedservice_bootstrap.settings));
 
 		let brandings = embeddedservice_bootstrap.settings.embeddedServiceConfig.branding;
-		console.log('brandings '+brandings);  
+		//console.log('brandings '+brandings);  
 		for (let i = 0; i < brandings.length; i++) {
-		   console.log('Branding looping');  
+		   //console.log('Branding looping');  
 		if(brandings[i].n=='logoImage')
 			{
 				brandings[i].v= 'https://media.peopleschoice.com.au/-/media/project/peopleschoice/shared/general/pccu-logo.svg?rev=4c30653da8104bd48172c32ffecace6e&hash=44457A7CFF03921DEE8C7924E4C7DCE8';
-				console.log('Branding updated');
+				//console.log('Branding updated');
 			}
 			else if (brandings[i].n =='avatarImage') {
                     brandings[i].v = 'https://media.istockphoto.com/id/892195860/vector/call-center-agent-head-avatar-character.jpg?s=1024x1024&w=is&k=20&c=CUY1CbB1H3A24luDIOlZnPZKG_FiTfvgr1YTnHMJgQM=';
@@ -1233,7 +1233,7 @@
                 }
                 else if (brandings[i].n =='botImage') {
                     brandings[i].v = 'https://avatars.githubusercontent.com/u/33565557?v=4';
-                    console.log('Bot image updated');
+                    //console.log('Bot image updated');
                 }
             
 		}
