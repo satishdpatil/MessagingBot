@@ -1160,26 +1160,20 @@
 <script type="text/javascript" src="https://service.force.com/embeddedservice/5.0/esw.min.js"></script>
 
 <script type="text/javascript">
-    // Add listener for when the embedded messaging is ready
-    window.addEventListener("onEmbeddedMessagingReady", () => {
-        console.log("onEmbeddedMessagingReady event");
-
-        // Check if userVerificationAPI is available
-        if (embeddedservice_bootstrap && embeddedservice_bootstrap.userVerificationAPI) {
-            console.log("Setting identity token...");
-            embeddedservice_bootstrap.userVerificationAPI.setIdentityToken({
-                identityTokenType: "JWT",
-                identityToken: "eyJraWQiOiIxMjM0NSIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJ0ZXN0SXNzdWVyIiwic3ViIjoidXNlcjEiLCJleHAiOjE3Mjk2MTAwOTMsImlhdCI6MTcyOTYwNDA5M30.VM2lVPjGGARo6mn5WHppBCqhLhLnxYJT26M6mlCzqtlNe8WKMv6edmqsC79QBl3WyHLBNfucz1K9lUkSRNx1A3pyeTOJ8Bmmfu0YLRc429xBkpHLsJ2yPIf56WXjvjR2RoxSg1YBK3Xm5JtxV17mDQT_Fm-8tejEcOLubhnxJb_LxWNgmIWbm7bcDvk3SwQCv0nr_5lCIx-OqpTCeZ9wI7JCQ6ZUkAjFa5AOON5FRnmQBhB8PaJyjZ5gSXEU9S6tmDgBQxfAGKtRzVDlhfBF4KKY5gx935ZJTZ9VwAkW4vxSRa1B3Dgl_o7INo7TWYycWCKiduMKXlraDE_9Q8bRVA",
-            });
-        } else {
-            console.error("userVerificationAPI is not available.");
-        }
-    });
-
     // Initialize Embedded Messaging
+	
+	embeddedservice_bootstrap.settings.language = 'en_US';
+			
+			window.addEventListener("onEmbeddedMessagingReady", () => {
+			console.log("onEmbeddedMessagingReady event");
+			embeddedservice_bootstrap.userVerificationAPI.setIdentityToken({
+				identityTokenType: "JWT",
+				identityToken: "eyJraWQiOiIxMjM0NSIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJ0ZXN0SXNzdWVyIiwic3ViIjoidXNlcjEiLCJleHAiOjE3Mjk2MTAwOTMsImlhdCI6MTcyOTYwNDA5M30.VM2lVPjGGARo6mn5WHppBCqhLhLnxYJT26M6mlCzqtlNe8WKMv6edmqsC79QBl3WyHLBNfucz1K9lUkSRNx1A3pyeTOJ8Bmmfu0YLRc429xBkpHLsJ2yPIf56WXjvjR2RoxSg1YBK3Xm5JtxV17mDQT_Fm-8tejEcOLubhnxJb_LxWNgmIWbm7bcDvk3SwQCv0nr_5lCIx-OqpTCeZ9wI7JCQ6ZUkAjFa5AOON5FRnmQBhB8PaJyjZ5gSXEU9S6tmDgBQxfAGKtRzVDlhfBF4KKY5gx935ZJTZ9VwAkW4vxSRa1B3Dgl_o7INo7TWYycWCKiduMKXlraDE_9Q8bRVA",
+			});
+		});
+		
     function initEmbeddedMessaging() {
         try {
-            embeddedservice_bootstrap.settings.language = 'en_US';
 
             // Initialize the chat service for a non-Salesforce site
             embeddedservice_bootstrap.init(
@@ -1191,8 +1185,28 @@
                 }
             );
 
+            // Launch chat after a slight delay
+            setTimeout(function() {
+                launchChat();
+            }, 8000);
         } catch (err) {
             console.error('Error initializing Embedded Messaging:', err);
+        }
+    }
+
+    // Function to launch the chat
+    function launchChat() {
+        // Ensure embedded_svc is defined before launching
+        if (typeof embedded_svc !== 'undefined') {
+            embeddedservice_bootstrap.utilAPI.launchChat()
+                .then(() => {
+                    console.log("Chat launched successfully");
+                })
+                .catch((err) => {
+                    console.error('Error launching chat:'+ JSON.stringify(err));
+                });
+        } else {
+            console.error('Embedded Service SDK not available.');
         }
     }
 
@@ -1200,7 +1214,34 @@
     window.onload = function() {
         initEmbeddedMessaging();
     };
+	
+		window.addEventListener("onEmbeddedMessagingReady", () => {
+		//console.log("Received the onEmbeddedMessagingReady event.");
+		//console.log('Settings Object4:::'+JSON.stringify(embeddedservice_bootstrap.settings));
+
+		let brandings = embeddedservice_bootstrap.settings.embeddedServiceConfig.branding;
+		//console.log('brandings '+brandings);  
+		for (let i = 0; i < brandings.length; i++) {
+		   //console.log('Branding looping');  
+		if(brandings[i].n=='logoImage')
+			{
+				brandings[i].v= 'https://media.peopleschoice.com.au/-/media/project/peopleschoice/shared/general/pccu-logo.svg?rev=4c30653da8104bd48172c32ffecace6e&hash=44457A7CFF03921DEE8C7924E4C7DCE8';
+				console.log('Branding updated');
+			}
+			else if (brandings[i].n =='avatarImage') {
+                    brandings[i].v = 'https://media.istockphoto.com/id/892195860/vector/call-center-agent-head-avatar-character.jpg?s=1024x1024&w=is&k=20&c=CUY1CbB1H3A24luDIOlZnPZKG_FiTfvgr1YTnHMJgQM=';
+                    console.log('Avatar image updated');
+                }
+                else if (brandings[i].n =='botImage') {
+                    brandings[i].v = 'https://avatars.githubusercontent.com/u/33565557?v=4';
+                    console.log('Bot image updated');
+                }
+            
+		}
+		});
+
 </script>
+
 <!-- Load necessary scripts for the non-Salesforce site -->
 <script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWMessaginWebBot1724159131779/assets/js/bootstrap.min.js"></script>
 
