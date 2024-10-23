@@ -1210,6 +1210,7 @@
                     console.log("Chat launched successfully");
                 })
                 .catch((err) => {
+				console.log('Error '+JSON.stringify(err));
                     console.error('Error launching chat:', err);
                 });
         } else {
