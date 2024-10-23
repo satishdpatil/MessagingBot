@@ -1159,41 +1159,60 @@
  
 <script type="text/javascript" src="https://service.force.com/embeddedservice/5.0/esw.min.js"></script>
 
-<script type='text/javascript'>
+<script type="text/javascript">
+    // Flag to ensure initEmbeddedMessaging and onEmbeddedMessagingReady only run once
+    let isMessagingInitialized = false;
 
-	window.addEventListener("onEmbeddedMessagingReady", () => {
+    // Event listener for when Embedded Messaging is ready
+    window.addEventListener("onEmbeddedMessagingReady", () => {
         console.log("onEmbeddedMessagingReady event");
 
-        // Check if userVerificationAPI is available
-        if (embeddedservice_bootstrap && embeddedservice_bootstrap.userVerificationAPI) {
-            console.log("Setting identity token...");
-            embeddedservice_bootstrap.userVerificationAPI.setIdentityToken({
-                identityTokenType: "JWT",
-                identityToken: "eyJraWQiOiIxMjM0NSIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJ0ZXN0SXNzdWVyIiwic3ViIjoidXNlcjEiLCJleHAiOjE3Mjk2ODI3ODgsImlhdCI6MTcyOTY3Njc4OH0.osP3YT-aLYU8STWF-mXopy_tYJVt43KDcpXOeYPZbhQlkuEn5fM29z4_DLdsmjoZccsdIpKcIIhKeanRWoP_XcSrPvPKneopYGeoRaGwdYx6hPz0FwhMHFLG-5gIbRxShzM0GGpPA00pZc_ALZKjMyuQr9sYiWY4OWCIFAsLcvt8kGJ2gPCwoZ1hQ73Er1OAEM7h2YH531Myl961TCVvS3a2ymbsLHMUcMfYXrWsyvYK-6NKMa8SJKsF5TCB9UyyZCS5Z8WIiJIl7uTfoMdtxTb66u37A-TFH2HbmAQJieGH1AZW-uYDmI-WqTnQWEPGdxm-Xhd9rL8lfuvhk0JCVg",
-            });
-        } else {
-            console.error("userVerificationAPI is not available.");
+        if (!isMessagingInitialized) { // Check if already initialized
+            isMessagingInitialized = true; // Set flag to true after first execution
+
+            // Check if userVerificationAPI is available
+            if (embeddedservice_bootstrap && embeddedservice_bootstrap.userVerificationAPI) {
+                console.log("Setting identity token...");
+                embeddedservice_bootstrap.userVerificationAPI.setIdentityToken({
+                    identityTokenType: "JWT",
+                    identityToken: "eyJraWQiOiIxMjM0NSIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJ0ZXN0SXNzdWVyIiwic3ViIjoidXNlcjEiLCJleHAiOjE3Mjk2ODI3ODgsImlhdCI6MTcyOTY3Njc4OH0.osP3YT-aLYU8STWF-mXopy_tYJVt43KDcpXOeYPZbhQlkuEn5fM29z4_DLdsmjoZccsdIpKcIIhKeanRWoP_XcSrPvPKneopYGeoRaGwdYx6hPz0FwhMHFLG-5gIbRxShzM0GGpPA00pZc_ALZKjMyuQr9sYiWY4OWCIFAsLcvt8kGJ2gPCwoZ1hQ73Er1OAEM7h2YH531Myl961TCVvS3a2ymbsLHMUcMfYXrWsyvYK-6NKMa8SJKsF5TCB9UyyZCS5Z8WIiJIl7uTfoMdtxTb66u37A-TFH2HbmAQJieGH1AZW-uYDmI-WqTnQWEPGdxm-Xhd9rL8lfuvhk0JCVg", // Replace with dynamically generated JWT token
+                });
+            } else {
+                console.error("userVerificationAPI is not available.");
+            }
         }
     });
-	
-	function initEmbeddedMessaging() {
-		try {
-			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
 
-			embeddedservice_bootstrap.init(
-				'00DBm000001O3Ub',
-				'ESDForUserVerification',
-				'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWESDForUserVerification1729658773003',
-				{
-					scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com'
-				}
-			);
-		} catch (err) {
-			console.error('Error loading Embedded Messaging: ', err);
-		}
-	};
+    // Function to initialize Embedded Messaging
+    function initEmbeddedMessaging() {
+        try {
+            if (!isMessagingInitialized) { // Ensure it's not already initialized
+                embeddedservice_bootstrap.settings.language = 'en_US'; // Set language
+
+                // Initialize Embedded Messaging
+                embeddedservice_bootstrap.init(
+                    '00DBm000001O3Ub', // Your Salesforce org ID
+                    'ESDForUserVerification', // Deployment ID
+                    'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWESDForUserVerification1729658773003', // Deployment URL
+                    {
+                        scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Correct Salesforce instance URL
+                    }
+                );
+            }
+        } catch (err) {
+            console.error('Error loading Embedded Messaging: ', err);
+        }
+    };
+
+    // Ensure initEmbeddedMessaging is only called once when the script loads
+    document.addEventListener("DOMContentLoaded", (event) => {
+        console.log('Document is ready, initializing Embedded Messaging...');
+        initEmbeddedMessaging();
+    });
 </script>
-<script type='text/javascript' src='https://peopleschoicecu--dev3.sandbox.my.site.com/ESWESDForUserVerification1729658773003/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
+<!-- Load the external bootstrap script and ensure initEmbeddedMessaging runs on load -->
+<script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWESDForUserVerification1729658773003/assets/js/bootstrap.min.js" onload="initEmbeddedMessaging()"></script
 </body>
 
 </html>
