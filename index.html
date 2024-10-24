@@ -1159,60 +1159,30 @@
  
 <script type="text/javascript" src="https://service.force.com/embeddedservice/5.0/esw.min.js"></script>
 
-<script type="text/javascript">
-    // Flag to ensure initEmbeddedMessaging and onEmbeddedMessagingReady only run once
-    let isMessagingInitialized = false;
+<script type='text/javascript'>
 
-    // Event listener for when Embedded Messaging is ready
-    window.addEventListener("onEmbeddedMessagingReady", () => {
-        console.log("onEmbeddedMessagingReady event");
+	
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
 
-        if (!isMessagingInitialized) { // Check if already initialized
-            isMessagingInitialized = true; // Set flag to true after first execution
-
-            // Check if userVerificationAPI is available
-            if (embeddedservice_bootstrap && embeddedservice_bootstrap.userVerificationAPI) {
-                console.log("Setting identity token...");
-                embeddedservice_bootstrap.userVerificationAPI.setIdentityToken({
-                    identityTokenType: "JWT",
-                    identityToken: "eyJraWQiOiIxMjM0NSIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJ0ZXN0SXNzdWVyIiwic3ViIjoidXNlcjEiLCJleHAiOjE3Mjk3NDQwMTQsImlhdCI6MTcyOTczODAxNH0.TjIuTrJ2K8PZxo6NTWpEH5IQmlWbz-QLkke2w7wZRZi1RrgjtTPEQEFA-d10ukCrl6fJB_J1b8e8atp_sIpe2NORIlk5Gg_5uSWrfrF6J8MKy5_2I6fW66mq3T9GCC4Ut6cGhNHSpk5WQaIjCnT06IYIvD0D14AXfehMjK_YUfVpZNmWE5srLEmTnwXll1md-Ky1mZhcnsNVwCPa0bFfaxhHTJUhC5a1sIVWEz3Aup_te53W6-1CG9yd2S4AUeBc8bfEwtgQJK006QzuqZbhdE9cnQ49fOWIFdi7VIQAJGU_mpkEmctq2oUTF3mv67HO-A9o5UcXFOdK2YTKrFPARw", // Replace with dynamically generated JWT token
-                });
-            } else {
-                console.error("userVerificationAPI is not available.");
-            }
-        }
-    });
-
-    // Function to initialize Embedded Messaging
-    function initEmbeddedMessaging() {
-        try {
-            if (!isMessagingInitialized) { // Ensure it's not already initialized
-                embeddedservice_bootstrap.settings.language = 'en_US'; // Set language
-
-                // Initialize Embedded Messaging
-                embeddedservice_bootstrap.init(
-                    '00DBm000001O3Ub', // Your Salesforce org ID
-                    'ESDForUserVerification', // Deployment ID
-                    'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWESDForUserVerification1729658773003', // Deployment URL
-                    {
-                        scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com' // Correct Salesforce instance URL
-                    }
-                );
-            }
-        } catch (err) {
-            console.error('Error loading Embedded Messaging: ', err);
-        }
-    };
-
-    // Ensure initEmbeddedMessaging is only called once when the script loads
-    document.addEventListener("DOMContentLoaded", (event) => {
-        console.log('Document is ready, initializing Embedded Messaging...');
-        initEmbeddedMessaging();
-    });
+			embeddedservice_bootstrap.init(
+				'00DBm000001O3Ub',
+				'ESDForUserVerification',
+				'https://peopleschoicecu--dev3.sandbox.my.site.com/ESWESDForUserVerification1729658773003',
+				{
+					scrt2URL: 'https://peopleschoicecu--dev3.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
 </script>
+<script type='text/javascript' src='https://peopleschoicecu--dev3.sandbox.my.site.com/ESWESDForUserVerification1729658773003/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+ss
 
-<!-- Load the external bootstrap script and ensure initEmbeddedMessaging runs on load -->
-<script type="text/javascript" src="https://peopleschoicecu--dev3.sandbox.my.site.com/ESWESDForUserVerification1729658773003/assets/js/bootstrap.min.js" onload="initEmbeddedMessaging()"></script
+
 </body>
 
 </html>
